@@ -23,12 +23,10 @@ public class TranslateUseCaseTest {
 
     @Test
     public void execute() throws Exception {
-        Word expected = new Word();
+        Word expected = new Word("BMW");
         expected.setLang("De");
-        expected.setValue("BMW");
 
-        Word word = new Word();
-        word.setValue("asdasd");
+        Word word = new Word("asdasd");
         word.setLang("Ru");
         assertEquals(expected, translator.translate(word,"Ru"));
     }

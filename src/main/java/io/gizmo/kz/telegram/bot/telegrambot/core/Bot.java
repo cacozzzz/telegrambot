@@ -2,23 +2,28 @@ package io.gizmo.kz.telegram.bot.telegrambot.core;
 
 import io.gizmo.kz.telegram.bot.telegrambot.gateway.Gateway;
 import io.gizmo.kz.telegram.bot.telegrambot.model.Update;
+import io.gizmo.kz.telegram.bot.telegrambot.model.translator.Word;
+import io.gizmo.kz.telegram.bot.telegrambot.translator.Translator;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Bot {
-    private final String token = "bot502399703:AAFx_qU0I6uNZ897LdC0keFtpsUg1Cqcoco";
+    private String token;
     private final String apiUrl = "api.telegram.org";
 
     private int lastUpdateId = 0;
 
     private Gateway gateway;
+    private Translator translator;
 
 
-    public Bot(Gateway gateway) {
+    public Bot(String apiKey, Gateway gateway, Translator translator) {
         System.out.println("!!!!!!create bot");
+        this.token = apiKey;
         this.gateway = gateway;
+        this.translator = translator;
     }
 
 
@@ -43,10 +48,10 @@ public class Bot {
         if (updates == null) return;
 
         for (Update update : updates) {
+            if(update.message == null || update.message.text == null) continue;
+
             Map<String, String> message = new HashMap<>();
-
             String answer = giveAnswer(update.message.text);
-
             message.put("chat_id", String.valueOf(update.message.chat.id));
             message.put("text", answer);
             sendMessage(message);
@@ -57,7 +62,9 @@ public class Bot {
         if (question.charAt(0) == '/') {
             return "Command was " + question.substring(1);
         } else {
-            return "Answer to " + question;
+
+            return translator.translate(new Word(question), "de").getValue();
+            //return "Answer to " + question;
         }
     }
 

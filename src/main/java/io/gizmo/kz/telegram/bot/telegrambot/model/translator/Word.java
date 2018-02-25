@@ -4,6 +4,9 @@ public class Word {
     private String value;
     private String lang;
 
+    public Word(String value) {
+        this.value = value;
+    }
 
     public String getValue() {
         return value;

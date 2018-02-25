@@ -1,10 +1,11 @@
 package io.gizmo.kz.telegram.bot.telegrambot.core;
 
 import io.gizmo.kz.telegram.bot.telegrambot.gateway.Gateway;
-import io.gizmo.kz.telegram.bot.telegrambot.gateway.GatewaySpring;
 import io.gizmo.kz.telegram.bot.telegrambot.model.Chat;
 import io.gizmo.kz.telegram.bot.telegrambot.model.Message;
 import io.gizmo.kz.telegram.bot.telegrambot.model.Update;
+import io.gizmo.kz.telegram.bot.telegrambot.model.translator.Word;
+import io.gizmo.kz.telegram.bot.telegrambot.translator.Translator;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,8 +46,17 @@ public class BotTest {
         }
     }
 
+    private class TranslatorSpy implements Translator {
+        @Override
+        public Word translate(Word word, String targetLang) {
+            return null;
+        }
+    }
+
+
     Bot bot;
     Gateway gateway;
+    Translator translator;
 
     @Test
     public void processUpdates() throws Exception {
@@ -61,7 +71,7 @@ public class BotTest {
     @Before
     public void setUp() throws Exception {
         gateway = new GatewaySpy();
-        bot = new Bot(gateway);
+        bot = new Bot(System.getenv("telegramApiToken"), gateway,translator);
     }
 
 }
